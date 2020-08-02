@@ -31,7 +31,6 @@ class MainUI(override val ctx: Context) : Ui {
 
     val rvWordsList = recyclerView {
         layoutManager = LinearLayoutManager(ctx)
-        setHasFixedSize(true)
     }
 
     val contentMain = frameLayout {

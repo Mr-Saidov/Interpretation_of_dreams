@@ -14,5 +14,9 @@
     <fragment
         android:id="@+id/desciptionFragment"
         android:name="java.com.interpretationofdreams.ui.description.DescriptionFragment"
-        android:label="DesciptionFragment" />
+        android:label="DesciptionFragment" >
+        <action
+            android:id="@+id/action_desciptionFragment_to_nav_main2"
+            app:destination="@id/nav_main" />
+    </fragment>
 </navigation>
