@@ -2,11 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/nav_main">
+    app:startDestination="@id/introFragment">
     <fragment
         android:id="@+id/nav_main"
         android:name="java.com.interpretationofdreams.ui.main.MainFragment"
-        android:label="main" >
+        android:label="main">
         <action
             android:id="@+id/action_nav_main_to_desciptionFragment"
             app:destination="@id/desciptionFragment" />
@@ -14,9 +14,17 @@
     <fragment
         android:id="@+id/desciptionFragment"
         android:name="java.com.interpretationofdreams.ui.description.DescriptionFragment"
-        android:label="DesciptionFragment" >
+        android:label="DesciptionFragment">
         <action
             android:id="@+id/action_desciptionFragment_to_nav_main2"
+            app:destination="@id/nav_main" />
+    </fragment>
+    <fragment
+        android:id="@+id/introFragment"
+        android:name="java.com.interpretationofdreams.ui.intro.IntroFragment"
+        android:label="IntroFragment">
+        <action
+            android:id="@+id/action_introFragment_to_nav_main"
             app:destination="@id/nav_main" />
     </fragment>
 </navigation>

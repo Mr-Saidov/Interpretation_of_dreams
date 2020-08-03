@@ -32,14 +32,19 @@ class MainUI(override val ctx: Context) : Ui {
     val rvWordsList = recyclerView {
         layoutManager = LinearLayoutManager(ctx)
     }
+    val etSearch = editText {
+        hint = "Type to find"
+        setTextColor(Color.BLACK)
+        textSize = 14f
+    }
 
-    val contentMain = frameLayout {
+    val contentMain = verticalLayout {
+        add(etSearch, lParams(matchParent, wrapContent))
         add(rvWordsList, lParams(matchParent, matchParent))
     }
 
     val appBarMain = verticalLayout {
         add(appBarLayout, lParams(matchParent, dp(56).toInt()))
-
         add(contentMain, lParams(matchParent, matchParent))
     }
 

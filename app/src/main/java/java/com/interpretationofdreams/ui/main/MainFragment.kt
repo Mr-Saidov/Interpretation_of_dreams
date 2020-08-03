@@ -2,7 +2,8 @@ package java.com.interpretationofdreams.ui.main
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -20,8 +21,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.experimental.InternalSplittiesApi
+import splitties.views.onClick
+import timber.log.Timber
 import java.com.interpretationofdreams.R
 import java.com.interpretationofdreams.data.local.localentity.Words
+import java.com.interpretationofdreams.util.hideSoftInputFromWindow
 
 @AndroidEntryPoint
 class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
@@ -35,6 +39,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     lateinit var drawerToggle: ActionBarDrawerToggle
 
     private val mainViewModel: MainViewModel by viewModels()
+    private val wordAdapter = WordAdapter()
 
     @InternalSplittiesApi
     override fun onCreateView(
@@ -90,6 +95,35 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                 }
             }
         })
+        ui.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                ui.rvWordsList.scrollToPosition(0)
+                mainViewModel.setfilter(p0.toString())
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+        })
+        wordAdapter.listener = {
+            val arg = Bundle()
+            arg.putInt("wordId", it.id)
+            Navigation.findNavController(ui.root)
+                .navigate(R.id.action_nav_main_to_desciptionFragment, arg)
+        }
+        ui.rvWordsList.adapter = wordAdapter
+        ui.rvWordsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                requireActivity().hideSoftInputFromWindow()
+            }
+        })
+        ui.toolbar.onClick { ui.rvWordsList.smoothScrollToPosition(0) }
     }
 
     @InternalSplittiesApi
@@ -110,27 +144,15 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     }
 
     @InternalSplittiesApi
-    private val wordObserver = Observer<PagedList<Words>> { it ->
-        Log.e(
-            this.toString(),
-            "private val wordObserver = Observer<PagedList<Words>> { it -> : " + it.size
-        )
-        val wordAdapter = WordAdapter().apply {
-            listener = {
-                val arg = Bundle()
-                arg.putInt("wordId", it.id)
-                Navigation.findNavController(ui.root)
-                    .navigate(R.id.action_nav_main_to_desciptionFragment, arg)
-            }
-        }
+    private val wordObserver = Observer<PagedList<Words>> {
+        Timber.e("private val wordObserver = Observer<PagedList<Words>> { it -> : %s", it.size)
         wordAdapter.submitList(it)
-        ui.rvWordsList.adapter = wordAdapter
-
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         lastYScroll = overallYScroll
+        mainViewModel.setfilter("")
         lastPosition = overallPosition
     }
 }
