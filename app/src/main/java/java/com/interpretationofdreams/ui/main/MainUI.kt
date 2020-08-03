@@ -3,6 +3,7 @@ package java.com.interpretationofdreams.ui.main
 import android.content.Context
 import android.graphics.Color
 import androidx.core.view.setPadding
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import splitties.dimensions.dp
 import splitties.experimental.InternalSplittiesApi
@@ -31,6 +32,7 @@ class MainUI(override val ctx: Context) : Ui {
 
     val rvWordsList = recyclerView {
         layoutManager = LinearLayoutManager(ctx)
+        itemAnimator = DefaultItemAnimator()
     }
     val etSearch = editText {
         hint = "Type to find"

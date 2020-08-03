@@ -2,11 +2,13 @@ package java.com.interpretationofdreams.ui.main
 
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import splitties.views.onClick
+import java.com.interpretationofdreams.R
 import java.com.interpretationofdreams.data.local.localentity.Words
 
 class WordAdapter() :
@@ -27,6 +29,9 @@ class WordAdapter() :
         fun bind(topic: Words) {
             itemView.onClick { listener?.invoke(topic) }
             itemView.findViewById<TextView>(WordItemUI.tvWord).text = topic.categoryName
+            val animation = AnimationUtils.loadAnimation(itemView.context, R.anim.slide_in_right)
+            itemView.animation = animation
+            itemView.animate()
         }
     }
 

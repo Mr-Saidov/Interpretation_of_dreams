@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -26,6 +28,7 @@ import timber.log.Timber
 import java.com.interpretationofdreams.R
 import java.com.interpretationofdreams.data.local.localentity.Words
 import java.com.interpretationofdreams.util.hideSoftInputFromWindow
+
 
 @AndroidEntryPoint
 class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
@@ -116,6 +119,10 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             Navigation.findNavController(ui.root)
                 .navigate(R.id.action_nav_main_to_desciptionFragment, arg)
         }
+        val resId: Int = R.anim.layout_animation
+        val animation: LayoutAnimationController =
+            AnimationUtils.loadLayoutAnimation(context, resId)
+        ui.rvWordsList.layoutAnimation = animation
         ui.rvWordsList.adapter = wordAdapter
         ui.rvWordsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -124,6 +131,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             }
         })
         ui.toolbar.onClick { ui.rvWordsList.smoothScrollToPosition(0) }
+
     }
 
     @InternalSplittiesApi
@@ -147,6 +155,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     private val wordObserver = Observer<PagedList<Words>> {
         Timber.e("private val wordObserver = Observer<PagedList<Words>> { it -> : %s", it.size)
         wordAdapter.submitList(it)
+        ui.rvWordsList.scheduleLayoutAnimation()
     }
 
     override fun onDestroyView() {
